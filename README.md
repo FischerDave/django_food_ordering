@@ -75,7 +75,7 @@ This project is configured to use SQLite by default, which is a simple file-base
 
 4.  **Populating the Database with Sample Data (Optional):**
 
-	If you have created the `populate_db.py` management command (as described in a previous response), you can run it to populate your database with initial data, including a test user (`username="testcustomer"`, `password="testpassword"`), a sample restaurant, and menu items. To execute this command, run the following in your terminal:
+	If you have created the `populate_db.py` management command (as described in a previous response), you can run it to populate your database with initial data, including a test user (`username="testcustomer"`, `password="$ecret123"`), a sample restaurant, and menu items. To execute this command, run the following in your terminal:
 
 	```bash
 	python manage.py populate_db
