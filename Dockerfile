@@ -8,17 +8,6 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-# Create a non-privileged user
-ARG UID=1000
-RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/nonexistent" \
-    --shell "/sbin/nologin" \
-    --no-create-home \
-    --uid "${UID}" \
-    appuser
-
 # Copy requirements and install dependencies
 COPY requirements.txt .
 RUN --mount=type=cache,target=/root/.cache/pip \
@@ -26,9 +15,6 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 # Install sqlite3
 RUN apt-get update && apt-get install -y sqlite3
-
-# Switch to the non-privileged user
-USER appuser
 
 # Copy the application code
 COPY . .
