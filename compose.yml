@@ -1,0 +1,16 @@
+version: '3.8'  # Version of the Docker Compose file format
+
+services:
+  server:  # The name of the service: "server" (this will also be the container name)
+    build:  # The build definition
+      context: .  # The directory where the Dockerfile is located (in this case, the current directory)
+      # dockerfile: Dockerfile  # Optional: If the file is not named "Dockerfile"
+    container_name: foodordering_server  # The name of the container
+    restart: always  # The restart policy for the container: always restart if it stops
+    ports:  # The ports that are exposed from the container
+      - "8000:8000"  # Map port 8000 on the host to port 8000 in the container
+    # volumes:  # Optional: Data volumes for persistent storage
+    #   - ./data:/app/data  # Mount the ./data directory on the host to /app/data in the container
+    # environment:  # Optional: Environment variables for the container
+    #   - DATABASE_URL=postgresql://user:password@host:port/databasename
+    #   - MU_URL=...  # Here you can add more variables e.g. a microservice URL
