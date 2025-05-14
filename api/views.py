@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework import generics, permissions, status, serializers
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
@@ -110,8 +110,5 @@ class RestaurantMenuView(generics.ListAPIView):
 
     def get_queryset(self):
         restaurant_id = self.kwargs.get('id')
-        try:
-            restaurant = Restaurant.objects.get(pk=restaurant_id)
-        except Restaurant.DoesNotExist:
-            return MenuItem.objects.none()
+        restaurant = get_object_or_404(Restaurant, pk=restaurant_id)
         return restaurant.menu.all()

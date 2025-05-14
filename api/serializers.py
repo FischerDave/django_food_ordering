@@ -51,13 +51,12 @@ class OrderItemCreateSerializer(serializers.Serializer):
     special_instructions = serializers.CharField(allow_blank=True, required=False)
 
 class CreateOrderSerializer(serializers.ModelSerializer):
-    items = OrderItemSerializer(many=True, read_only=True)
+    items = OrderItemCreateSerializer(many=True, write_only=True)
     restaurantId = serializers.IntegerField(write_only=True)
-    order_items_for_create = OrderItemCreateSerializer(many=True, write_only=True, source='items')
 
     class Meta:
         model = Order
-        fields = ['id', 'restaurantId', 'items', 'order_items_for_create', 'customer']
+        fields = ['id', 'restaurantId', 'items', 'customer']
         read_only_fields = ['id', 'customer']
 
     def create(self, validated_data):
@@ -77,7 +76,7 @@ class CreateOrderSerializer(serializers.ModelSerializer):
             try:
                 menu_item = MenuItem.objects.get(pk=item_data['menuItemId'], restaurant=restaurant)
             except MenuItem.DoesNotExist:
-                raise serializers.ValidationError({'order_items_for_create': f"Érvénytelen menüpont ID: {item_data['menuItemId']} az adott étteremben."})
+                raise serializers.ValidationError({'items': f"Érvénytelen menüpont ID: {item_data['menuItemId']} az adott étteremben."})
             order_item = OrderItem.objects.create(order=order, menu_item=menu_item, quantity=item_data['quantity'], special_instructions=item_data.get('special_instructions', ''))
             order_items.append(order_item)
 
@@ -86,8 +85,8 @@ class CreateOrderSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation['items'] = OrderItemSerializer(instance.items.all(), many=True).data
-        representation['customer'] = {'id': instance.customer.id, 'username': instance.customer.username} # Hozzáadtuk!
-        representation['restaurant'] = {'id': instance.restaurant.id, 'name': instance.restaurant.name} # Hozzáadtuk a restaurant-ot is a teszt miatt
+        representation['customer'] = {'id': instance.customer.id, 'username': instance.customer.username}
+        representation['restaurant'] = {'id': instance.restaurant.id, 'name': instance.restaurant.name}
         return representation
 
 class RegistrationSerializer(serializers.Serializer):

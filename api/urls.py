@@ -14,7 +14,7 @@ urlpatterns = [
 
     # Order endpoints (customer)
     path('orders/', views.CreateOrderView.as_view(), name='create-order'),
-    path('orders/<int:pk>/', views.CustomerOrderDetailView.as_view(), name='customer-order-detail'), # Új URL
+    path('orders/<int:pk>/', views.CustomerOrderDetailView.as_view(), name='customer-order-detail'),
 
     # Order endpoints (restaurant - feltételezve, hogy a felhasználóhoz éttermek vannak kötve)
     path('restaurants/orders/', views.OrderListView.as_view(), name='restaurant-order-list'),

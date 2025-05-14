@@ -11,10 +11,10 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS('Teszt adatok létrehozása...'))
 
         # Felhasználó létrehozása (ha még nincs)
-        # test_user, created = User.objects.get_or_create(username='testuser')
-        # if created:
-        #     test_user.set_password('secret')
-        #     test_user.save()
+        test_user, created = User.objects.get_or_create(username='testuser')
+        if created:
+            test_user.set_password('$ecret123')
+            test_user.save()
 
         # Éttermek létrehozása
         restaurant1 = Restaurant.objects.create(name='Teszt Étterem 1', address='Teszt Cím 1')

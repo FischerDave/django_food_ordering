@@ -51,7 +51,6 @@ class AuthEndToEndTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertIn('token', response.data)
         self.assertTrue(User.objects.filter(username='testuser').exists())
-        # Itt potenciálisan létrehozhattál tokent rosszul
 
     def test_user_login(self):
         user = User.objects.create_user(username='testuser', password='testpassword', email='test@example.com')
@@ -67,7 +66,7 @@ class AuthEndToEndTests(TestCase):
 
     def test_who_am_i_authenticated(self):
         user = User.objects.create_user(username='authuser', password='authpassword', email='auth@example.com')
-        token, _ = Token.objects.get_or_create(user=user) # Ez a helyes mód
+        token, _ = Token.objects.get_or_create(user=user)
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
         response = self.client.get(reverse('who-am-i'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -129,7 +128,7 @@ class OrderEndToEndTests(TestCase):
         self.item2 = MenuItem.objects.create(restaurant=self.restaurant, name="Burger", price=15)
         self.order_data = {
             'restaurantId': self.restaurant.id,
-            'order_items_for_create': [
+            'items': [
                 {'menuItemId': self.item1.id, 'quantity': 1},
                 {'menuItemId': self.item2.id, 'quantity': 2, 'special_instructions': 'Extra feltét'}
             ]
@@ -154,10 +153,10 @@ class OrderEndToEndTests(TestCase):
 
     def test_create_order_invalid_menu_item(self):
         invalid_data = self.order_data.copy()
-        invalid_data['order_items_for_create'][0]['menuItemId'] = 999
+        invalid_data['items'][0]['menuItemId'] = 999
         response = self.client.post(reverse('create-order'), invalid_data, content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('order_items_for_create', response.data)
+        self.assertIn('items', response.data)
 
 class CustomerOrderEndToEndTests(TestCase):
     def setUp(self):
